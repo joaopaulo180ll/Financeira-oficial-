@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanças Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Esconder barra de rolagem mas manter funcionalidade */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 flex justify-center min-h-screen antialiased">
+
+    <div class="w-full max-w-md bg-slate-900 min-h-screen flex flex-col shadow-2xl relative border-x border-slate-800">
+        
+        <header class="p-6 pb-4 flex justify-between items-center sticky top-0 bg-slate-900/80 backdrop-blur-md z-10">
+            <div>
+                <p class="text-xs text-slate-400 font-medium">Bem-vindo de volta,</p>
+                <h1 class="text-xl font-bold text-white tracking-wide">Minhas Finanças</h1>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+                U
+            </div>
+        </header>
+
+        <main class="flex-1 px-6 pb-32 overflow-y-auto no-scrollbar">
+            
+            <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 shadow-xl shadow-indigo-600/20 mb-4 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+                <p class="text-sm text-indigo-100/80 font-medium mb-1">Saldo Total</p>
+                <h2 id="balance" class="text-3xl font-bold tracking-tight mb-6">R$ 0,00</h2>
+                
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                    <div>
+                        <div class="flex items-center gap-1.5 text-emerald-300 text-xs font-semibold mb-1">
+                            <i data-lucide="arrow-down-left" class="w-4 h-4"></i> Entradas
+                        </div>
+                        <p id="total-incomes" class="text-base font-bold text-white">R$ 0,00</p>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5 text-rose-300 text-xs font-semibold mb-1">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i> Saídas
+                        </div>
+                        <p id="total-expenses" class="text-base font-bold text-white">R$ 0,00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-950/60 border border-indigo-500/30 rounded-2xl p-4 mb-6 flex flex-col gap-3 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-3 opacity-10">
+                    <i data-lucide="heart" class="w-16 h-16 text-indigo-400 fill-indigo-400"></i>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-indigo-400 flex items-center gap-1.5">
+                        <i data-lucide="heart" class="w-4 h-4 fill-indigo-400"></i> Apoie nosso Projeto!
+                    </h4>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Gostou do app? Ajude-nos a manter e evoluir esta ferramenta fazendo uma contribuição voluntária via Mercado Pago.
+                    </p>
+                </div>
+                <a href="https://mpago.la/2hcfaRv" target="_blank" rel="noopener noreferrer" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10 transition-all active:scale-[0.98]">
+                    <i data-lucide="hand-heart" class="w-4 h-4"></i>
+                    Apoiando via Mercado Pago
+                </a>
+            </div>
+
+            <div class="mb-4 flex justify-between items-center">
+                <h3 class="font-bold text-lg text-white">Transações</h3>
+                <span class="text-xs text-indigo-400 font-semibold bg-indigo-500/10 px-2.5 py-1 rounded-full">Recentes</span>
+            </div>
+
+            <div id="transactions-list" class="space-y-3">
+                <div id="empty-state" class="text-center py-8 text-slate-500">
+                    <i data-lucide="wallet" class="w-12 h-12 mx-auto mb-2 stroke-1"></i>
+                    <p class="text-sm">Nenhuma transação registrada ainda.</p>
+                </div>
+            </div>
+
+        </main>
+
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
+            <button onclick="toggleModal()" class="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/40 transition-all active:scale-95">
+                <i data-lucide="plus" class="w-7 h-7"></i>
+            </button>
+        </div>
+
+        <div id="modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-end justify-center">
+            <div class="absolute inset-0" onclick="toggleModal()"></div>
+            
+            <div class="bg-slate-900 w-full max-w-md rounded-t-[2.5rem] p-6 border-t border-slate-800 transform translate-y-0 transition-transform duration-300 relative z-10">
+                <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mb-6"></div>
+                
+                <h3 class="text-xl font-bold text-white mb-6 text-center">Nova Transação</h3>
+                
+                <form id="transaction-form" onsubmit="addTransaction(event)" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3 p-1 bg-slate-950 rounded-2xl">
+                        <label class="cursor-pointer text-center">
+                            <input type="radio" name="type" value="income" checked class="sr-only peer">
+                            <div class="py-3 rounded-xl font-semibold text-sm text-slate-400 peer-checked:bg-emerald-500/10 peer-checked:text-emerald-400 transition-all">
+                                Entrada
+                            </div>
+                        </label>
+                        <label class="cursor-pointer text-center">
+                            <input type="radio" name="type" value="expense" class="sr-only peer">
+                            <div class="py-3 rounded-xl font-semibold text-sm text-slate-400 peer-checked:bg-rose-500/10 peer-checked:text-rose-400 transition-all">
+                                Saída
+                            </div>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-slate-400 block mb-1.5">Descrição</label>
+                        <input type="text" id="description" required placeholder="Ex: Salário, Mercado..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-semibold text-slate-400 block mb-1.5">Valor (R$)</label>
+                        <input type="number" step="0.01" id="amount" required placeholder="0,00" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 pt-4">
+                        <button type="button" onclick="toggleModal()" class="w-full py-3.5 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-xl font-semibold text-sm transition-colors">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-indigo-500 to-violet-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-indigo-500/20 active:scale-95 transition-transform">
+                            Confirmar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
+
+        // Estado do App (Carrega dados salvos no navegador se existirem)
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        function toggleModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) {
+                document.getElementById('description').focus();
+            }
+        }
+
+        function formatCurrency(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function updateUI() {
+            const list = document.getElementById('transactions-list');
+            const emptyState = document.getElementById('empty-state');
+            
+            // Cálculos
+            const incomes = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
+            const expenses = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
+            const balance = incomes - expenses;
+
+            // Atualiza os Cards Superiores
+            document.getElementById('balance').innerText = formatCurrency(balance);
+            document.getElementById('total-incomes').innerText = formatCurrency(incomes);
+            document.getElementById('total-expenses').innerText = formatCurrency(expenses);
+
+            // Muda cor do saldo se for negativo
+            const balanceEl = document.getElementById('balance');
+            if(balance < 0) {
+                balanceEl.classList.remove('text-white');
+                balanceEl.classList.add('text-rose-400');
+            } else {
+                balanceEl.classList.remove('text-rose-400');
+                balanceEl.classList.add('text-white');
+            }
+
+            // Atualiza a Lista de Transações
+            list.innerHTML = '';
+            
+            if (transactions.length === 0) {
+                list.appendChild(emptyState);
+            } else {
+                // Ordena as mais recentes primeiro
+                [...transactions].reverse().forEach(t => {
+                    const isIncome = t.type === 'income';
+                    const item = document.createElement('div');
+                    item.className = "bg-slate-950/50 border border-slate-800/60 p-4 rounded-2xl flex justify-between items-center transition-all hover:border-slate-700";
+                    
+                    item.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center ${isIncome ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">
+                                <i data-lucide="${isIncome ? 'arrow-down-left' : 'arrow-up-right'}" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white">${t.description}</p>
+                                <p class="text-[10px] text-slate-500">${t.date}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-bold ${isIncome ? 'text-emerald-400' : 'text-rose-400'}">
+                                ${isIncome ? '+' : '-'} ${formatCurrency(t.amount)}
+                            </span>
+                            <button onclick="deleteTransaction(${t.id})" class="text-slate-600 hover:text-rose-400 transition-colors">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+                lucide.createIcons();
+            }
+        }
+
+        function addTransaction(e) {
+            e.preventDefault();
+            
+            const description = document.getElementById('description').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.querySelector('input[name="type"]:checked').value;
+            
+            const newTransaction = {
+                id: Date.now(),
+                description,
+                amount,
+                type,
+                date: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+            };
+
+            transactions.push(newTransaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            // Resetar form e fechar modal
+            document.getElementById('transaction-form').reset();
+            toggleModal();
+            
+            updateUI();
+        }
+
+        function deleteTransaction(id) {
+            transactions = transactions.filter(t => t.id !== id);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            updateUI();
+        }
+
+        // Renderização inicial
+        updateUI();
+    </script>
+</body>
+</html>
